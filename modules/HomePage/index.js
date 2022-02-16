@@ -11,13 +11,13 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 
 export default function HomePage() {
-
-  const [gameContract, setGameContract] = useState(null);
+  
+  const [ticketContract, setTicketContract] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [loadingEvent, setLoadingEvent] = useState(false)
 
   /***Known-Issues / Enhancements
   1. if the wallet is disconnected, the app doesnt automatically "log out"
-
   **/
 
   // Actions
@@ -88,6 +88,78 @@ export default function HomePage() {
     }
   };
 
+  const createEventInContract = async (eventObj) => {
+
+    let connected = await checkIfWalletIsConnected()
+
+    if(connected){
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        NFTickets.abi,
+        signer
+      );
+
+      setTicketContract(contract)
+
+      console.log("contract is connected!", eventObj )
+
+      setLoadingEvent(true)
+
+      
+      
+      /*
+      try {
+        if (gameContract) {
+          console.log('Minting character in progress...');
+            await gameContract.mintDFSTeamNFT(
+            dfsTeam[9].date,
+            Number(dfsTeam[0].id),
+            Number(dfsTeam[1].id),
+            Number(dfsTeam[2].id),
+            Number(dfsTeam[3].id),
+            Number(dfsTeam[4].id),
+            Number(dfsTeam[5].id),
+            Number(dfsTeam[6].id),
+            Number(dfsTeam[7].id),
+            Number(dfsTeam[8].id),
+            {value: ethers.utils.parseEther("1")}
+          );
+
+          //router.push(`/cryptoDFS/enter-contest`) //could also transfer NFT Data
+
+          router.push({
+            pathname: `/cryptoDFS/enter-contest`,
+            query: {
+              date: dfsTeam[9].date,
+              pg_one:  dfsTeam[1].name,
+              pg_two:  dfsTeam[2].name,
+              sg_one:  dfsTeam[3].name,
+              sg_two:  dfsTeam[4].name,
+              sf_one:  dfsTeam[5].name,
+              sf_two:  dfsTeam[6].name,
+              pf_one:  dfsTeam[7].name,
+              pf_two:  dfsTeam[8].name,
+              c:  dfsTeam[9].name,
+            },
+          })
+
+
+          //await mintTxn.wait();
+          //console.log('mintTxn:', mintTxn);
+        }
+      } catch (error) {
+        console.warn('MintCharacterAction Error:', error);
+      }
+      */
+
+    } else {
+      alert("confirm Metamask is connected")
+    }
+  };
+
   /*
   * This runs our checkWallet function when the page loads.
   */
@@ -96,10 +168,12 @@ export default function HomePage() {
   }, []);
 
 
+
+
   return(
     <div>
     { currentAccount ? 
-      <CreateEvent /> :
+      <CreateEvent loadingEvent = {loadingEvent} makeEvent = {(obj)=>{createEventInContract(obj)}}/> :
       <Container component="main" maxWidth="xs">
       <Card
           sx={{
@@ -134,10 +208,28 @@ export default function HomePage() {
 
 /*
 
-const gameContract = new ethers.Contract(
-  CONTRACT_ADDRESS,
-  NFTickets.abi,
-  signer
-);
+
+    //Add a callback method that will fire when this event is received
+
+    const onCharacterMint = async (sender, tokenId) => {
+    console.log(
+      `CharacterNFTMinted - sender: ${sender} tokenId: ${tokenId.toNumber()}`
+    );
+
+    //alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
+  };
+
+  if (gameContract) {
+    //Setup NFT Minted Listener
+
+    gameContract.on('dfsTeamNFTMinted', onCharacterMint);
+  }
+
+  return () => {
+    // When your component unmounts, let's make sure to clean up this listener
+    if (gameContract) {
+      gameContract.off('dfsTeamNFTMinted', onCharacterMint);
+    }
+  }
 
 */
