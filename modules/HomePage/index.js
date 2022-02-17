@@ -9,6 +9,45 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import axios from 'axios'
+
+function formatTime(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var eventTime = hours + ':' + minutes + ' ' + ampm;
+  
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+
+  const eventDate = month  + '/'+ day + '/' + year ;
+  
+  return {eventDate, eventTime};
+}
+
+const postJsonToPinata = async (jsonBody) => {
+  const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+
+  try{
+    let response = await axios.post(url, jsonBody, {
+          headers: {
+              pinata_api_key: '2944d6e6de50b55e0f15',
+              pinata_secret_api_key: 'fa6bcee17fbe85fb46958bd1dd1f3e2838eb4f0392ae2b35ebfd293720644fc6'
+          }
+      })
+
+      return response
+
+    } catch (error) {
+      console.log(error)
+    }
+
+};
+
 
 export default function HomePage() {
   
@@ -20,8 +59,10 @@ export default function HomePage() {
   1. if the wallet is disconnected, the app doesnt automatically "log out"
   **/
 
+
   // Actions
   const checkIfWalletIsConnected = async () => {
+
     /*
       * First make sure we have access to window.ethereum
       */
@@ -62,6 +103,7 @@ export default function HomePage() {
   const connectWalletAction = async () => {
 
     console.log("attempting to connect wallet")
+  
 
     try {
       const { ethereum } = window;
@@ -88,6 +130,7 @@ export default function HomePage() {
     }
   };
 
+
   const createEventInContract = async (eventObj) => {
 
     let connected = await checkIfWalletIsConnected()
@@ -104,11 +147,69 @@ export default function HomePage() {
 
       setTicketContract(contract)
 
-      console.log("contract is connected!", eventObj )
-
       setLoadingEvent(true)
 
+      let {eventDate, eventTime} = formatTime(eventObj.timeValue)
+
+
+      let pinataObj = {
+        attributes: [
+          {
+            trait_type: "Event Date",
+            value: eventDate
+          },
+          {
+            trait_type: "Event Time",
+            value: eventTime
+          },
+          {
+            trait_type: "Vendor Name",
+            value: eventObj.vendorName
+          },
+          {
+            trait_type: "Event Name",
+            value: eventObj.eventName
+          },
+          {
+            trait_type: "Max Tickets",
+            value: Number(eventObj.ticketNumber)
+          },
+        ],
+        description: "New NFTicket Event",
+        image: null        
+      }
+
+      console.log("contract is connected!", pinataObj )
+
+
+      let response = await postJsonToPinata(pinataObj)
+
+      console.log(response)
+
+      //connect to the axios server to send NFT Data
       
+
+      //send eventID, maxCapacity and CID
+
+      //wait for data from the emitter
+
+      /*
+      router.push({
+        pathname: `/cryptoDFS/enter-contest`,
+        query: {
+          date: dfsTeam[9].date,
+          pg_one:  dfsTeam[1].name,
+          pg_two:  dfsTeam[2].name,
+          sg_one:  dfsTeam[3].name,
+          sg_two:  dfsTeam[4].name,
+          sf_one:  dfsTeam[5].name,
+          sf_two:  dfsTeam[6].name,
+          pf_one:  dfsTeam[7].name,
+          pf_two:  dfsTeam[8].name,
+          c:  dfsTeam[9].name,
+        },
+      })
+      */
       
       /*
       try {
