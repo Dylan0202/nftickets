@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import axios from 'axios'
-
+import {useRouter} from 'next/router'
 
 
 function formatTime(date) {
@@ -57,12 +57,23 @@ export default function HomePage() {
   const [loadingEvent, setLoadingEvent] = useState(false);
   const [ticketUrl, setTicketUrl] = useState(false)
   const [confirmedEvent, setConfirmedEvent] = useState(false)
+  const [cid, setCid] = useState(null)
 
+  const router = useRouter();
 
   /***Known-Issues / Enhancements
   1. if the wallet is disconnected, the app doesnt automatically "log out"
   **/
 
+ const onInitEvent = async (sender, eventId) => {
+    //console.log(cid)
+    console.log(
+      `EventInitialized - sender: ${sender} tokenId: ${eventId.toNumber()}`
+    );
+    setLoadingEvent(false)
+    setConfirmedEvent(eventId.toNumber())
+
+  };
 
   // Actions
   const checkIfWalletIsConnected = async () => {
@@ -189,13 +200,12 @@ export default function HomePage() {
       //connect to the pinata ipfs server to send NFT Data
       let response = await postJsonToPinata(pinataObj)
 
-      const cid  = response.data.IpfsHash
+      setCid(response.data.IpfsHash)
+      console.log(response.data.IpfsHash)
 
       //send eventID, maxCapacity and CID to the solidity contract
 
       await contract.initEvent(eventObj.eventName, Number(eventObj.ticketNumber))
-
-      setTicketUrl("http://localhost:3000/buyaticket?cid=" + cid);
       //move this to a button press after the contract loads
       /*
       router.push({
@@ -277,22 +287,27 @@ export default function HomePage() {
   * This runs our checkWallet function when the page loads.
   */
   useEffect(() => {
-    checkIfWalletIsConnected();
-  }, []);
+    if(confirmedEvent){
+      console.log(cid)
+      console.log(confirmedEvent)
+      setTicketUrl("http://localhost:3000/buyaticket?cid="+cid+"&eventId="+confirmedEvent)
+    }
+  }, [confirmedEvent]);
+
+  /*
+  * This runs our checkWallet function when the page loads.
+  */
+ useEffect(() => {
+  checkIfWalletIsConnected();
+}, []);
 
   /*
   * This runs our checkWallet function when the page loads.
   */
   useEffect(() => {
 
-    const onInitEvent = async (sender, tokenId) => {
-      console.log(
-        `EventInitialized - sender: ${sender} tokenId: ${tokenId.toNumber()}`
-      );
-      setLoadingEvent(false)
-      setConfirmedEvent(true)
+      //setTicketUrl("http://localhost:3000/buyaticket?cid=" + cid);
       //alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
-    };
   
     if (ticketContract) {
       //Setup NFT Minted Listener

@@ -34,30 +34,65 @@ function Copyright(props) {
   );
 }
 
-const readJsonFromPinata = async (jsonBody) => {
+const readJsonFromPinata = async (cid) => {
 
   //const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
 
-  const getUrl = 'https://gateway.pinata.cloud/ipfs/QmTG7EAauMkLdZL8R7vQv2rHPMCwdTtVcWcGopdMCDtZvw'
+  const getUrl = 'https://gateway.pinata.cloud/ipfs/' + cid
 
   try{
 
     let response = await axios.get(getUrl)
 
-      console.log(response)
-
-      return response
+      return response.data.attributes
 
     } catch (error) {
       console.log(error)
     }
 };
 
-export default function MintTicket() {
+export default function MintTicket({mintDetails, ticketContract, minted}) {
+
+    const [response, setResponse] = React.useState(null)
+    const [details, setDetails] = React.useState(mintDetails)
+    const [loading, setLoading] = React.useState(null)
+
+    const callMintTicket = async () => {
+      setLoading(true)
+      await ticketContract.mintNFT(mintDetails.eventId, mintDetails.cid)
+      //console.log("ticket Minted")
+    }
+
+    const returnButton = () =>{
+      if(minted){
+        return(
+        <Button variant = "contained" color = "primary" >
+          Ticket Minted!
+        </Button>
+        )
+
+      } else if(loading){
+        return(
+          <Button variant = "contained" color = "primary" disabled>
+            Ticket Minting...
+          </Button>
+          )
+      }
+      return(
+        <Button variant = "contained" color = "secondary" onClick = {() => {callMintTicket()}}>
+        Mint a Ticket
+      </Button>
+      )
+    }
 
     useEffect(async () => {
-      await readJsonFromPinata();
-    }, []);
+
+      //console.log(details)
+      setResponse(await readJsonFromPinata(details.cid))
+
+      //console.log(response)
+    }, [details]);
+
 
 
     return (
@@ -72,15 +107,40 @@ export default function MintTicket() {
                 backgroundColor: '#F5F5F5' 
                 }}
             >
-                Drip Splash!
+              <Typography variant = "h4">
+                Mint your NFTicket
+              </Typography>
+                
             </Card>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} display = "flex" flexDirection = "column" alignItems="center">
               <Grid item>
                 <Image         
                   src={ticketPic}
                   alt="NFTickets"
                 />
               </Grid>
+              {response ? 
+              <>
+                <Grid item>
+                  <Typography variant = "h4">
+                    {response[3].value}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant = "h5">
+                    {response[0].value}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant = "h5">
+                    {response[1].value}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  {returnButton()}
+                </Grid>
+              </>
+              : null }
             </Grid>
             <Copyright sx={{ mt: 5 }} />
         </Container>

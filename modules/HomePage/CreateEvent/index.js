@@ -97,7 +97,7 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
       } else if (confirmedEvent){
 
         return(
-null
+          null
         )
 
       } else {
@@ -203,7 +203,7 @@ null
                 </Grid>
                 <Grid container justifyContent="center">
                   {getButton()}
-                </Grid>
+                </Grid> 
                 </Box>
                   {confirmedEvent ?
                     <Button

@@ -38,6 +38,8 @@ export default function BuyATicket() {
   
   const [ticketContract, setTicketContract] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [mintDetails, setMintDetails] = useState(null);
+  const [minted, setMinted] = useState(false)
 
   const router = useRouter();
   
@@ -46,6 +48,30 @@ export default function BuyATicket() {
   **/
 
   // Actions
+
+  const onMintEvent = async (sender, tokenId) => {
+    setMinted(true)
+    console.log(
+      `NFTicket Minted! - sender: ${sender} tokenId: ${tokenId.toNumber()}`
+    );
+
+  };
+
+  const connectTicketContract = async () => {
+
+    if(currentAccount){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        NFTickets.abi,
+        signer
+      );
+
+      setTicketContract(contract)
+    } 
+
+  }
   const checkIfWalletIsConnected = async () => {
 
     /*
@@ -119,16 +145,56 @@ export default function BuyATicket() {
   * This runs our checkWallet function when the page loads.
   */
   useEffect(() => {
-      if(router.query){
-          console.log(router.query)
-      }
+
     checkIfWalletIsConnected();
   }, []);
 
+  useEffect(() => {
+    connectTicketContract();
+  }, [currentAccount]);
+
+
+  /*
+  * This runs our checkWallet function when the page loads.
+  */
+ useEffect(() => {
+
+    //setTicketUrl("http://localhost:3000/buyaticket?cid=" + cid);
+    //alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
+
+  if (ticketContract) {
+    //Setup NFT Minted Listener
+
+    ticketContract.on('minted', onMintEvent);
+  }
+
+  return () => {
+    // When your component unmounts, let's make sure to clean up this listener
+    if (ticketContract) {
+      ticketContract.off('eventInitialized', onMintEvent);
+    }
+  }
+
+}, [ticketContract]);
+
+
+  useEffect(() => {
+
+    if(router.query.cid){
+      console.log("router query", router.query)
+      setMintDetails({
+        cid: router.query.cid,
+        eventId: router.query.eventId
+      })
+    }
+
+  }, [router.query]);
+
+
   return(
     <div>
-    { currentAccount ? 
-      <MintTicket /> :
+    { currentAccount && mintDetails ?  
+      <MintTicket mintDetails = {mintDetails} ticketContract = {ticketContract} minted = {minted} /> :
       <Container component="main" maxWidth="xs">
       <Card
           sx={{
