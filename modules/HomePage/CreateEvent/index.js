@@ -16,7 +16,7 @@ import {Event} from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import {useRouter} from 'next/router'
 import CardMedia from '@mui/material/CardMedia';
-import ticketPic from '../../../public/NFTickets.png'
+import ticketPic from '../../../public/nftickets.png'
 import Image from 'next/image'
 
 
