@@ -15,6 +15,9 @@ import TimePicker from '@mui/lab/TimePicker';
 import {Event} from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import {useRouter} from 'next/router'
+import CardMedia from '@mui/material/CardMedia';
+import ticketPic from '../../../public/NFTickets.png'
+import Image from 'next/image'
 
 
 //import { styled } from '@mui/system';
@@ -119,7 +122,7 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
     }
 
     return (
-        <Container component="main" maxWidth = "sm" >
+        <Container component="main" maxWidth = "xs" >
             <Card
                 sx={{
                 marginTop: 8,
@@ -130,10 +133,14 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
                 backgroundColor: '#F5F5F5' 
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                  <Event/>
-                </Avatar>
-                <Typography component="h1" variant="h5">
+            <CardMedia sx={{mb:1}} title="NFTickets">
+              <Image
+                src={ticketPic}
+
+                objectFit="contain" // or objectFit="cover"
+              />
+            </CardMedia>
+              <Typography component="h1" variant="h5">
                 Create Event
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

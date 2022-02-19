@@ -107,6 +107,7 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
                 backgroundColor: '#F5F5F5' 
                 }}
             >
+              
               <Typography variant = "h4">
                 Mint your NFTicket
               </Typography>

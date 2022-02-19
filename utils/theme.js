@@ -13,4 +13,7 @@ export const themeOptions = {
       default: '#f2efea',
     },
   },
+  typography: {
+    fontFamily: 'pt sans',
+  },
 };
