@@ -339,7 +339,6 @@ export default function HomePage() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#F2EFEA'
           }}>
 
           <Typography component="h1" variant="h5">
