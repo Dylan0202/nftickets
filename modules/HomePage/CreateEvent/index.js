@@ -13,6 +13,9 @@ import Card from '@mui/material/Card';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TimePicker from '@mui/lab/TimePicker';
 import {Event} from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
+import {useRouter} from 'next/router'
+
 
 //import { styled } from '@mui/system';
 
@@ -36,11 +39,19 @@ function Copyright(props) {
   );
 }
 
-export default function CreateEvent({makeEvent, loadingEvent}) {
+
+export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirmedEvent}) {
+
+  const router = useRouter();
+
 
   const [dateValue, setDateValue] = React.useState(new Date());
   const [timeValue, setTimeValue] = React.useState(new Date());
 
+
+  function goToLink(){
+    router.push(ticketUrl)
+  }
 
   const handleSubmit = (event) => {
       event.preventDefault();
@@ -64,8 +75,51 @@ export default function CreateEvent({makeEvent, loadingEvent}) {
       console.log(dateValue)
     };
 
+    const getButton = () =>{
+
+      if(loadingEvent){
+
+        return(
+            <Button
+            type="submit"
+            fullWidth
+            disabled
+            variant="contained"
+            sx={{ 
+              maxWidth: "250px",
+              mt: 3, 
+              mb: 2 }}
+        >
+            Confirming Event... please wait
+        </Button> 
+        )
+
+      } else if (confirmedEvent){
+
+        return(
+null
+        )
+
+      } else {
+        return (
+          <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ 
+                maxWidth: "250px",
+                mt: 3, 
+                mb: 2 }}
+          >
+              Create Event NFTickets
+          </Button>
+        )
+      }
+    
+    }
+
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth = "sm" >
             <Card
                 sx={{
                 marginTop: 8,
@@ -148,34 +202,33 @@ export default function CreateEvent({makeEvent, loadingEvent}) {
                     </Grid>
                 </Grid>
                 <Grid container justifyContent="center">
-                  {loadingEvent ? 
-                      <Button
-                      type="submit"
-                      fullWidth
-                      disabled
-                      variant="contained"
-                      sx={{ 
-                        maxWidth: "250px",
-                        mt: 3, 
-                        mb: 2 }}
-                  >
-                      Confirming Event... please wait
-                  </Button> :
-                  <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ 
-                        maxWidth: "250px",
-                        mt: 3, 
-                        mb: 2 }}
-                  >
-                      Create Event NFTickets
-                  </Button>
-                  }
-
+                  {getButton()}
                 </Grid>
                 </Box>
+                  {confirmedEvent ?
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        onClick = {()=> goToLink()}
+                        sx={{ 
+                          maxWidth: "250px",
+                          mt: 3, 
+                          mb: 2 }}
+                    >
+                      Go To Mint
+                    </Button> : null
+                    }
+
+                  { ticketUrl ? 
+                      <Alert 
+                      severity = "warning"
+                      sx={{
+                        maxWidth: "600px"
+                      }}>
+                        Mint your tickets here: {ticketUrl} </Alert> : null 
+                    }
+                
             </Card>
             <Copyright sx={{ mt: 5 }} />
         </Container>

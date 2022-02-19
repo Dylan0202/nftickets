@@ -11,6 +11,8 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import axios from 'axios'
 
+
+
 function formatTime(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
@@ -45,7 +47,6 @@ const postJsonToPinata = async (jsonBody) => {
     } catch (error) {
       console.log(error)
     }
-
 };
 
 
@@ -53,7 +54,10 @@ export default function HomePage() {
   
   const [ticketContract, setTicketContract] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
-  const [loadingEvent, setLoadingEvent] = useState(false)
+  const [loadingEvent, setLoadingEvent] = useState(false);
+  const [ticketUrl, setTicketUrl] = useState(false)
+  const [confirmedEvent, setConfirmedEvent] = useState(false)
+
 
   /***Known-Issues / Enhancements
   1. if the wallet is disconnected, the app doesnt automatically "log out"
@@ -182,15 +186,23 @@ export default function HomePage() {
       console.log("contract is connected!", pinataObj )
 
 
+      //connect to the pinata ipfs server to send NFT Data
       let response = await postJsonToPinata(pinataObj)
 
-      console.log(response)
+      const cid  = response.data.IpfsHash
 
-      //connect to the axios server to send NFT Data
+      //send eventID, maxCapacity and CID to the solidity contract
+
+      await contract.initEvent(eventObj.eventName, Number(eventObj.ticketNumber))
+
+      setTicketUrl("http://localhost:3000/buyaticket?cid=" + cid);
+      //move this to a button press after the contract loads
+      /*
+      router.push({
+        pathname: '/buyaticket',
+        query: {cid},
+      }) */
       
-
-      //send eventID, maxCapacity and CID
-
       //wait for data from the emitter
 
       /*
@@ -268,13 +280,42 @@ export default function HomePage() {
     checkIfWalletIsConnected();
   }, []);
 
+  /*
+  * This runs our checkWallet function when the page loads.
+  */
+  useEffect(() => {
 
+    const onInitEvent = async (sender, tokenId) => {
+      console.log(
+        `EventInitialized - sender: ${sender} tokenId: ${tokenId.toNumber()}`
+      );
+      setLoadingEvent(false)
+      setConfirmedEvent(true)
+      //alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
+    };
+  
+    if (ticketContract) {
+      //Setup NFT Minted Listener
+  
+      ticketContract.on('eventInitialized', onInitEvent);
+    }
+  
+    return () => {
+      // When your component unmounts, let's make sure to clean up this listener
+      if (ticketContract) {
+        ticketContract.off('eventInitialized', onInitEvent);
+      }
+    }
+    
+  }, [ticketContract]);
 
 
   return(
     <div>
     { currentAccount ? 
-      <CreateEvent loadingEvent = {loadingEvent} makeEvent = {(obj)=>{createEventInContract(obj)}}/> :
+      <>
+        <CreateEvent confirmedEvent = {confirmedEvent} loadingEvent = {loadingEvent} ticketUrl = {ticketUrl} makeEvent = {(obj) =>{createEventInContract(obj)}}/>
+      </> :
       <Container component="main" maxWidth="xs">
       <Card
           sx={{
