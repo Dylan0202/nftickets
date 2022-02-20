@@ -17,8 +17,8 @@ import Button from '@mui/material/Button';
 
 export default function TicketPage() {
     //consts go here
-    const [parsedData, setParsedData] = useState(JSON.parse("{\n\t\"owner\": \"0x343rfd323j42h34rdrdfsdfsdf\",\n\t\"ticket\": \"1231223\"\n}"));
-    const [displayInfo, setDispalyInfo] = useState(true);
+    const [parsedData, setParsedData] = useState(JSON.parse("{\n\t\"owner\": \"0x3e4a729E0A975d61494f6992aB19271167D8E0AE\",\n\t\"ticketID\": \"1\"\n}"));
+    const [displayInfo, setDisplayInfo] = useState(true);
     // wallet check - needs to be a scanner's wallet - i wonder if we can whitelist specific addresses that are scanners
 
     const [ticketContract, setTicketContract] = useState(null);
@@ -28,7 +28,7 @@ export default function TicketPage() {
     const parseData = async (data) => {
         var jsonData = JSON.parse(data);
         //setParsedData(jsonData);
-        setDispalyInfo(true);
+        setDisplayInfo(true);
         //verifyTicket(jsonData);
     }
 
@@ -146,12 +146,12 @@ export default function TicketPage() {
                                 <li>Event Name: DeadMau5's Castle</li>
                                 <li>Event Time: Jan 1st 2023</li>
                         </ul>
-                    <QRCode className="qrcode" size={300} value={parsedData.toString()}/>
+                    <QRCode className="qrcode" size={300} value={JSON.stringify(parsedData)}/>
                         <img className="ticketImage"
                         src="https://www.tribout.com/wp-content/uploads/2019/07/roll-tickets-admit-one-blue.jpg"
                         />
                     <ul>
-                        <li>Ticket ID: {parsedData.ticket} </li>
+                        <li>Ticket ID: {parsedData.ticketID} </li>
                         <li>Ticket Owner: {parsedData.owner}</li>
                     </ul>
                 </div>
