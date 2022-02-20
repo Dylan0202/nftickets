@@ -206,9 +206,9 @@ export default function HomePage() {
       //send eventID, maxCapacity and CID to the solidity contract
       //OLD Contract Code: await contract.initEvent(eventObj.eventName, Number(eventObj.ticketNumber))
 
-      console.log(String(eventObj.eventName) + " " + String(eventObj.vendorName) + " " + String(eventDate)+ " " + String(eventTime)+ " " + Number(eventObj.ticketNumber)+ " " + 0+ " " + "https://gateway.pinata.cloud/ipfs/QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M")
+      //console.log(String(eventObj.eventName) + " " + String(eventObj.vendorName) + " " + String(eventDate)+ " " + String(eventTime)+ " " + Number(eventObj.ticketNumber)+ " " + 0+ " " + "https://gateway.pinata.cloud/ipfs/QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M")
 
-      await contract.initEvent(String(eventObj.eventName), String(eventObj.vendorName), String(eventDate), String(eventTime), Number(eventObj.ticketNumber), 0, "https://gateway.pinata.cloud/ipfs/QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M")
+      await contract.initEvent(String(eventObj.eventName), String(eventObj.vendorName), String(eventDate), String(eventTime), "QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M", Number(eventObj.ticketNumber))
       //move this to a button press after the contract loads
 
    
