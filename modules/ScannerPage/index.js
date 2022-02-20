@@ -84,7 +84,10 @@ export default function ScannerPage() {
         setIsChecking(true);
         try {
             if (ticketContract){
-                const verifyTxn = await ticketContract.verifyTicket(qrJson.owner, qrJson.ticketID);
+                console.log(qrJson.owner)
+                let ticketId = Number(qrJson.ticketId) - 1
+                console.log(ticketId)
+                const verifyTxn = await ticketContract.verifyTicket(qrJson.owner, qrJson.ticketId); //change back to qrJson.ticketId
                 console.log(verifyTxn);
                 setDisplayInfo(true);
                 setValidTicket(true);

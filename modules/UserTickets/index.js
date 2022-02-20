@@ -55,7 +55,7 @@ export default function UserTickets() {
 
       var config = {
         method: 'get',
-        url: `${baseURL}?owner=${currentAccount}&withMetadata=true`
+        url: `${baseURL}?owner=${currentAccount}&withMetadata=true&contractAddresses[]=${CONTRACT_ADDRESS}`
       };
 
       let data = await axios(config);
@@ -70,6 +70,8 @@ export default function UserTickets() {
         //console.log(nft.id.tokenId)
 
         if(nft.metadata.attributes.length > 0){
+
+          console.log(nft)
 
           userNftArray.push({
             eventName: nft.metadata.attributes[2].value,
