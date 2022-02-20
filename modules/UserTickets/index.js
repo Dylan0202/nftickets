@@ -159,12 +159,29 @@ export default function UserTickets() {
   return(
     <div>
     { currentAccount ?  
-        ticketData.map(()=>{
+        <>
+        <Container component="main" maxWidth="xs">
+        <Card
+            sx={{
+            marginTop: 8,
+            padding: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            }}>
+            <Typography component="h1" variant="h5">
+                Your Tickets
+            </Typography>
+            </Card>
+        </Container>
+
+        {ticketData.map(()=>{
             
             return (
                 <TicketDisplay />
             )
-        })
+        })}
+        </>
         :
       <Container component="main" maxWidth="xs">
       <Card
@@ -176,7 +193,7 @@ export default function UserTickets() {
           alignItems: 'center',
           }}>
 
-          <Typography component="h1" variant="h5">
+          <Typography component="h1">
             Connect Wallet to Buy A Ticket!
           </Typography>
           <Button 

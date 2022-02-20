@@ -1,6 +1,8 @@
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
+
 
 export default function TicketDisplay() {
 
@@ -10,15 +12,25 @@ export default function TicketDisplay() {
         <Container component="main" maxWidth="xs">
             <Card
             sx={{
-                margin: 4,
+                margin: 2,
                 padding: 3,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
+                alignItems: 'center'
             }}>
                 <Typography component="h1" variant="h5">
-                Build Shit Here
+                    Elton John
                 </Typography>
+                <Typography component="h4" variant="h5">
+                    Crypto.com Arena
+                </Typography>
+                <Typography component="h5" variant="h5">
+                    4/24, 7pm
+                </Typography>
+                <Button >
+                    Click me
+                </Button>
+
             </Card> 
         </Container>
     )
