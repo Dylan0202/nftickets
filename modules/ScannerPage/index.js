@@ -1,7 +1,8 @@
 import {ethers} from 'ethers';
 import {useEffect, useState} from 'react';
 import dynamic from 'next/dynamic';
-//import BarcodeScannerComponent from 'react-qr-barcode-scanner';
+import {CONTRACT_ADDRESS} from '../../constants';
+import NFTickets from '../../utils/NFTickets.json';
 const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), {
     ssr: false
 });
@@ -14,14 +15,80 @@ export default function ScannerPage() {
     const [ticketOwner, setTicketOwner] = useState();
     const [displayInfo, setDisplayInfo] = useState(false);
     const [validTicket, setValidTicket] = useState(false);
+    const [ticketContract, setTicketContract] = useState(CONTRACT_ADDRESS);
+    const [currentAccount, setCurrentAccount] = useState(null);
     // wallet check - needs to be a scanner's wallet - i wonder if we can whitelist specific addresses that are scanners
-   
+    const checkIfWalletIsConnected = async () => {
+        /*
+          * First make sure we have access to window.ethereum
+          */
+        try {
+          const { ethereum } = window;
+          if (!ethereum) {
+            alert('Make sure you have MetaMask!');
+            setCurrentAccount(null);
+            return false;
+          } else {
+            console.log('We have the ethereum object', ethereum);
+            /*
+              * Check if we're authorized to access the user's wallet
+              */
+            const accounts = await ethereum.request({ method: 'eth_accounts' });
+            /*
+              * User can have multiple authorized accounts, we grab the first one if its there!
+              */
+            if (accounts.length !== 0) {
+              const account = accounts[0];
+              console.log('Found an authorized account:', account);
+              setCurrentAccount(account);
+              return true
+            } else {
+              console.log('No authorized account found');
+              setCurrentAccount(null);
+              return false
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      const connectWalletAction = async () => {
+        console.log("attempting to connect wallet")
+        try {
+          const { ethereum } = window;
+    
+          if (!ethereum) {
+            console.log('Get MetaMask!');
+            return;
+          }
+          /*
+           * Fancy method to request access to account.
+           */
+          const accounts = await ethereum.request({
+            method: 'eth_requestAccounts',
+          });
+    
+          /*
+           * Boom! This should print out public address once we authorize Metamask.
+           */
+          console.log('Connected', accounts[0]);
+          setCurrentAccount(accounts[0]);
+        } catch (error) {
+          console.log(error);
+        }
+      };
     // functions here
-    const verifyTicket = async (qrJson) => {
-        setValidTicket(false);
+    const veriTicket = async (qrJson) => {
+      console.log(qrJson);
+      console.log(typeof(qrJson));
         setIsChecking(true);
-        try{
-            //CALL CONTRACT VERIFY FUNCTION qrJson.owner etc etc
+        try {
+            if (ticketContract){
+                const verifyTxn = await ticketContract.verifyTicket(qrJson.owner, qrJson.ticketID);
+                console.log(verifyTxn);
+                setDisplayInfo(true);
+                setValidTicket(true);
+            }
             setValidTicket(true);
             setDisplayInfo(true);
         } catch (error) {
@@ -31,13 +98,12 @@ export default function ScannerPage() {
         setIsChecking(false);
     }
     const parseDataAndSend = async (qrData) => {
-        var jsonData = JSON.parse(JSON.parse(qrData));
+        console.log(typeof(qrData));
+        var jsonData = JSON.parse(qrData);
         setTicketID(jsonData.ticketID);
         setTicketOwner(jsonData.owner);
-        setDisplayInfo(true);
-        setValidTicket(false);
         console.log("parsing");
-        //verifyTicket(jsonData);
+        veriTicket(jsonData);
     }
     const renderScanner = () => {
         if (!isChecking) {
@@ -48,7 +114,7 @@ export default function ScannerPage() {
                     onUpdate={(err, result) => {
                         if (result) {
                           setScannedData(result.text);
-                          parseDataAndSend(result.text); 
+                          parseDataAndSend(result.text);
                         }
                        else setScannedData("Not Found");
                     }}
@@ -73,8 +139,8 @@ export default function ScannerPage() {
                     <ul>
                         <li>Ticket Id: {ticketID}</li>
                         <li>Ticket Owner: {ticketOwner}</li>
-                        <li>Valid Ticket?</li>
                     </ul>
+                    <h2> YOUR TICKET IS VALID. ENJOY THE SHOW </h2>
                 </div>
                 </div>
             )
@@ -99,6 +165,25 @@ export default function ScannerPage() {
             )
         }
     }
+    useEffect(() => {
+        checkIfWalletIsConnected();
+      }, []);
+
+      useEffect(() => { 
+        const {ethereum} = window;
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const signer = provider.getSigner();
+          const ticketContract = new ethers.Contract(
+            CONTRACT_ADDRESS,
+            NFTickets.abi,
+            signer
+          );
+          setTicketContract(ticketContract);
+        } else {
+          console.log('Ethereum object not found :(');
+        }
+      }, []);
 
     //final render
     return (
