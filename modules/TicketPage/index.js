@@ -9,6 +9,8 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import {useRouter} from 'next/router'
+
 
 //import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 //const BarcodeScannerComponent = dynamic(() => import('react-qr-barcode-scanner'), {
@@ -16,6 +18,9 @@ import Button from '@mui/material/Button';
 //});
 
 export default function TicketPage() {
+
+    const router = useRouter();
+
     //consts go here
     const [parsedData, setParsedData] = useState(JSON.parse("{\n\t\"owner\": \"0x3e4a729E0A975d61494f6992aB19271167D8E0AE\",\n\t\"ticketID\": \"1\"\n}"));
     const [displayInfo, setDisplayInfo] = useState(true);
@@ -134,6 +139,14 @@ export default function TicketPage() {
       useEffect(() => {
         connectTicketContract();
       }, [currentAccount]);
+
+      useEffect(() => {
+
+        if(router.query.eventName){
+          console.log("router query", router.query)
+        }
+    
+      }, [router.query]);
     
 
     const renderTicketInfo = () => {
@@ -166,11 +179,24 @@ export default function TicketPage() {
 
     //final render
     return (
-        <div className="mainContainer">
-            <div className="dataContainer">
-                <div className="description">
-                {
-                    currentAccount ? renderTicketInfo() : 
+      <>
+
+                { currentAccount ? 
+                        <Container component="main" maxWidth="xs">
+                          <Card
+                              sx={{
+                              marginTop: 8,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              padding: 3,
+                              backgroundColor: 'white' 
+                              }}
+                          >
+                          {renderTicketInfo()}
+
+                      </Card>
+                </Container>                  : 
                     <Container component="main" maxWidth="xs">
                     <Card
                         sx={{
@@ -199,8 +225,6 @@ export default function TicketPage() {
                   </Container>
                 }
                 
-                </div>
-            </div>
-        </div>
+</>
     )
 }
