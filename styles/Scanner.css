@@ -1,0 +1,102 @@
+html{
+    background-color: #636e72;
+}
+
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 64px;
+    background-color: #636e72;
+
+  }
+  
+  .dataContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 95vw;
+    text-align: center;
+    background-color: #c4613a;
+    border-radius: 5px;
+    color: black;
+    padding: 5px;
+  }
+  
+  .header {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .scannedInfo{
+      width: 35%;
+      margin: auto;
+      background-color: #f2d663;
+      border-radius: 5px;
+      padding: 5px;
+  }
+
+  .scannedInfo li{
+      list-style-type: none;
+      text-align: left;
+
+  }
+
+.ticketImage{
+    width: 100%;
+}
+
+.eventList {
+    display: grid;     
+    grid-template-columns: repeat(3, 1fr);     
+    grid-auto-rows: auto;   
+    grid-gap: 5px;
+}
+          
+.eventCard {  
+    border: 2px solid black;     
+    border-radius: 4px;     
+    padding: .5px;    
+    background-color: #e7e7e7;
+    }
+
+.eventList li{
+    list-style-type: none;
+    text-align: left;
+}
+
+.eventCard p{
+    text-align: left;
+}
+
+.eventList button{
+    background-color: #1c5384;
+    border: 1px solid black;
+    color: white;
+    font-weight: bold;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.eventList button:hover{
+    background-color: grey;
+    color: black;
+}
+.eventList button:active{
+    background-color: green;
+    background: green;
+    -webkit-box-shadow: inset 0px 0px 5px green;
+    -moz-box-shadow: inset 0px 0px 5px green;
+    box-shadow: inset 0px 0px 5px green;
+    outline: none;
+}
+
+.qrcode{
+    margin: 5px;
+}
