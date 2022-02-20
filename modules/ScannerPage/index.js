@@ -132,15 +132,11 @@ export default function ScannerPage() {
             return(
                 <div className="ticketInfo">
                     <div className="scannedInfo">
-                        <ul>
-                                <li>Event Name:</li>
-                                <li>Event Time:</li>
-                        </ul>
                         <img className="ticketImage"
                         src="https://www.tribout.com/wp-content/uploads/2019/07/roll-tickets-admit-one-blue.jpg"
                         />
                     <ul>
-                        <li>Ticket Id: {ticketID}</li>
+                        <li>Ticket Id: {ticketId}</li>
                         <li>Ticket Owner: {ticketOwner}</li>
                     </ul>
                     <h2> YOUR TICKET IS VALID. ENJOY THE SHOW </h2>
