@@ -22,15 +22,16 @@ export default function TicketPage() {
     const router = useRouter();
 
     //consts go here
-    const [parsedData, setParsedData] = useState(JSON.parse("{\n\t\"owner\": \"0x3e4a729E0A975d61494f6992aB19271167D8E0AE\",\n\t\"ticketID\": \"1\"\n}"));
+    const [parsedData, setParsedData] = useState(null);
     const [displayInfo, setDisplayInfo] = useState(true);
     // wallet check - needs to be a scanner's wallet - i wonder if we can whitelist specific addresses that are scanners
 
-    const [ticketContract, setTicketContract] = useState(null);
     const [currentAccount, setCurrentAccount] = useState(null);
    
     // functions here
     const parseData = async (data) => {
+
+       console.log(data)
         var jsonData = JSON.parse(data);
         //setParsedData(jsonData);
         setDisplayInfo(true);
@@ -42,22 +43,6 @@ export default function TicketPage() {
        var ticketData;
        parseData(ticketData);
     }
-
-    const connectTicketContract = async () => {
-
-        if(currentAccount){
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = provider.getSigner();
-          const contract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            NFTickets.abi,
-            signer
-          );
-    
-          setTicketContract(contract)
-        } 
-    
-      }
     
       const checkIfWalletIsConnected = async () => {
     
@@ -136,36 +121,38 @@ export default function TicketPage() {
         checkIfWalletIsConnected();
       }, []);
     
-      useEffect(() => {
-        connectTicketContract();
-      }, [currentAccount]);
 
       useEffect(() => {
 
-        if(router.query.eventName){
+        if(router.query.eventName && currentAccount){
           console.log("router query", router.query)
+
+          setParsedData({
+            owner: currentAccount,
+            ticketId: router.query.ticketId
+          })
         }
     
-      }, [router.query]);
+      }, [router.query, currentAccount]);
     
 
     const renderTicketInfo = () => {
-        if (displayInfo){
+        if (displayInfo && parsedData){
             return(
                 <div className="ticketInfo">
                     <h1> Your NFTicket: </h1>
                     <div className="scannedInfo">
                     <ul>
-                                <li>Event Name: DeadMau5's Castle</li>
-                                <li>Event Time: Jan 1st 2023</li>
+                        <li>{router.query.eventName}</li>
+                        <li>{router.query.eventDate}</li>
                         </ul>
                     <QRCode className="qrcode" size={300} value={JSON.stringify(parsedData)}/>
                         <img className="ticketImage"
                         src="https://www.tribout.com/wp-content/uploads/2019/07/roll-tickets-admit-one-blue.jpg"
                         />
                     <ul>
-                        <li>Ticket ID: {parsedData.ticketID} </li>
-                        <li>Ticket Owner: {parsedData.owner}</li>
+                        <li>Ticket ID: {router.query.ticketId} </li>
+                        <li>Ticket Owner: {currentAccount}</li>
                     </ul>
                 </div>
                 </div>
@@ -179,24 +166,11 @@ export default function TicketPage() {
 
     //final render
     return (
-      <>
-
-                { currentAccount ? 
-                        <Container component="main" maxWidth="xs">
-                          <Card
-                              sx={{
-                              marginTop: 8,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              padding: 3,
-                              backgroundColor: 'white' 
-                              }}
-                          >
-                          {renderTicketInfo()}
-
-                      </Card>
-                </Container>                  : 
+        <div className="mainContainer">
+            <div className="dataContainer">
+                <div className="description">
+                {
+                    currentAccount ? renderTicketInfo() : 
                     <Container component="main" maxWidth="xs">
                     <Card
                         sx={{
@@ -225,6 +199,8 @@ export default function TicketPage() {
                   </Container>
                 }
                 
-</>
+                </div>
+            </div>
+        </div>
     )
 }
