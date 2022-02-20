@@ -136,7 +136,7 @@ export default function ScannerPage() {
                         src="https://www.tribout.com/wp-content/uploads/2019/07/roll-tickets-admit-one-blue.jpg"
                         />
                     <ul>
-                        <li>Ticket Id: {ticketId}</li>
+                        <li>Ticket Id: {ticketID}</li>
                         <li>Ticket Owner: {ticketOwner}</li>
                     </ul>
                     <h2> YOUR TICKET IS VALID. ENJOY THE SHOW </h2>
