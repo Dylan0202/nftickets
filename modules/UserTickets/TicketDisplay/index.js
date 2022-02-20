@@ -4,6 +4,8 @@ import Card from '@mui/material/Card';
 
 export default function TicketDisplay() {
 
+    //will likely need to use the CID to get event ID data. 
+
     return(
         <Container component="main" maxWidth="xs">
             <Card

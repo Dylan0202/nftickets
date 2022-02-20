@@ -60,7 +60,7 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
 
     const callMintTicket = async () => {
       setLoading(true)
-      await ticketContract.mintNFT(mintDetails.eventId)
+      await ticketContract.mintTicket(mintDetails.eventId)
       // OLD CONTRACT CODE:  await ticketContract.mintNFT(mintDetails.eventId, mintDetails.cid)
 
       //console.log("ticket Minted")

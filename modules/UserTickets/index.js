@@ -9,8 +9,6 @@ import TicketDisplay from './TicketDisplay'
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import axios from 'axios'
-
 
 
 export default function UserTickets() {
@@ -123,7 +121,6 @@ export default function UserTickets() {
   * This runs our checkWallet function when the page loads.
   */
   useEffect(() => {
-
     checkIfWalletIsConnected();
   }, []);
 
