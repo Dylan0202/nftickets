@@ -9,6 +9,20 @@ import TicketDisplay from './TicketDisplay'
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+
+// replace with your Alchemy api key
+const apiKey = "_U8Lq4eBGpjj3QQpnmXIPSjt5CJz0UsI";
+const baseURL = `https://polygon-mumbai.g.alchemy.com/v2/${apiKey}/getNFTs/`;
+// replace with the wallet address you want to query for NFTs
+//const ownerAddr = "0xfAE46f94Ee7B2Acb497CEcAFf6Cff17F621c693D";
+
+
+/*
+axios(config)
+.then(response => console.log(JSON.stringify(response.data, null, 2)))
+.catch(error => console.log(error));
+*/
 
 
 export default function UserTickets() {
@@ -16,6 +30,7 @@ export default function UserTickets() {
   const [ticketContract, setTicketContract] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
   const [ticketData, setTicketData] = useState([{test:"test"},{test:"test1"},{test:"test2"},{test:"test3"}])
+  const [userNFTs, setUserNFTs] = useState(null);
 
 
   /**Use Later
@@ -30,23 +45,48 @@ export default function UserTickets() {
 
   // Actions
 
-
-
-  const connectTicketContract = async () => {
-
+  const callGetEvents = async () => {
+    
     if(currentAccount){
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        NFTickets.abi,
-        signer
-      );
 
-      setTicketContract(contract)
-    } 
+      //console.log(currentAccount)
 
+      //let data = await ticketContract.getMyEvents(currentAccount, {gasLimit: 2000000})
+
+      var config = {
+        method: 'get',
+        url: `${baseURL}?owner=${currentAccount}&withMetadata=true`
+      };
+
+      let data = await axios(config);
+
+      //console.log(data.data.ownedNfts)
+
+      let userNftArray = [] 
+
+      for(let nft of data.data.ownedNfts){
+
+        //console.log(nft.metadata)
+        //console.log(nft.id.tokenId)
+
+        if(nft.metadata.attributes.length > 0){
+
+          userNftArray.push({
+            eventName: nft.metadata.attributes[2].value,
+            eventTime: nft.metadata.attributes[1].value,
+            eventDate: nft.metadata.attributes[0].value,
+            ticketID: parseInt(nft.id.tokenId, 16)
+          })
+
+        }
+
+      }
+
+      setUserNFTs(userNftArray)
+      
+    }
   }
+
 
   const checkIfWalletIsConnected = async () => {
 
@@ -125,8 +165,9 @@ export default function UserTickets() {
   }, []);
 
   useEffect(() => {
-    connectTicketContract();
+    callGetEvents();
   }, [currentAccount]);
+
 
 
   /*
@@ -158,7 +199,7 @@ export default function UserTickets() {
 
   return(
     <div>
-    { currentAccount ?  
+    { currentAccount && userNFTs ?  
         <>
         <Container component="main" maxWidth="xs">
         <Card
@@ -175,10 +216,10 @@ export default function UserTickets() {
             </Card>
         </Container>
 
-        {ticketData.map(()=>{
-            
+
+        {userNFTs.map((data)=> {
             return (
-                <TicketDisplay />
+                <TicketDisplay data = {data}/>
             )
         })}
         </>
