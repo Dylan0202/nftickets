@@ -1,14 +1,11 @@
 import '../styles/globals.css'
 import {ThemeProvider, createTheme} from '@mui/material/styles';
-import '../styles/scanner.css'
 import CssBaseline from '@mui/material/CssBaseline';
 import {themeOptions} from '../utils/theme'
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 const theme = createTheme(themeOptions);
-
-
 
 function MyApp({ Component, pageProps }) {
   return (
