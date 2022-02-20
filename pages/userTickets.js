@@ -1,7 +1,7 @@
-//import UserTickets from '../modules/BuyATicket'
+import UserTickets from '../modules/UserTickets'
 import Head from 'next/head'
 
-function BuyATicket() {
+function DisplayAllTickets() {
   return ( 
     <>
       <Head>
@@ -9,9 +9,9 @@ function BuyATicket() {
       <meta name="description" content="Get your ticket here." />
       <link rel="icon" href="/favicon.ico" />
     </Head>
-    <BuyTicket /> 
+    <UserTickets /> 
   </>
   )
 }
 
-export default BuyATicket
+export default DisplayAllTickets
