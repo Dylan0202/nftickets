@@ -12,7 +12,6 @@ import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TimePicker from '@mui/lab/TimePicker';
-import {Event} from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import {useRouter} from 'next/router'
 import CardMedia from '@mui/material/CardMedia';

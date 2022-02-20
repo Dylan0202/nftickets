@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react'
 import {CONTRACT_ADDRESS} from '../../constants'
 import NFTickets from '../../utils/NFTickets.json'
 import Card from '@mui/material/Card';
+import TicketDisplay from './TicketDisplay'
 //import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 //Place this in Avatar <LockOutlinedIcon />
 import Typography from '@mui/material/Typography';
@@ -16,6 +17,7 @@ export default function UserTickets() {
   
   const [ticketContract, setTicketContract] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [ticketData, setTicketData] = useState([{test:"test"},{test:"test1"},{test:"test2"},{test:"test3"}])
 
 
   /**Use Later
@@ -160,21 +162,12 @@ export default function UserTickets() {
   return(
     <div>
     { currentAccount ?  
-    <Container component="main" maxWidth="xs">
-      <Card
-      sx={{
-      marginTop: 8,
-      padding: 3,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      }}>
-
-      <Typography component="h1" variant="h5">
-        Build Shit Here
-      </Typography>
-      </Card> 
-      </Container>
+        ticketData.map(()=>{
+            
+            return (
+                <TicketDisplay />
+            )
+        })
         :
       <Container component="main" maxWidth="xs">
       <Card
