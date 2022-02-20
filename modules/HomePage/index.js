@@ -224,7 +224,7 @@ export default function HomePage() {
     if(confirmedEvent){
       console.log(cid)
       console.log(confirmedEvent)
-      setTicketUrl("http://localhost:3000/buyaticket?cid="+cid+"&eventId="+confirmedEvent)
+      setTicketUrl("http://nftickets.vercel.app/buyaticket?cid="+cid+"&eventId="+confirmedEvent)
     }
   }, [confirmedEvent]);
 
