@@ -12,6 +12,7 @@ import axios from 'axios'
 import Image from 'next/image'
 import {useEffect} from 'react'
 import ticketPic from '../../../public/ticket.jpg'
+import CardMedia from '@mui/material/CardMedia';
 
 //import { styled } from '@mui/system';
 
@@ -59,7 +60,9 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
 
     const callMintTicket = async () => {
       setLoading(true)
-      await ticketContract.mintNFT(mintDetails.eventId, mintDetails.cid)
+      await ticketContract.mintNFT(mintDetails.eventId)
+      // OLD CONTRACT CODE:  await ticketContract.mintNFT(mintDetails.eventId, mintDetails.cid)
+
       //console.log("ticket Minted")
     }
 
@@ -104,45 +107,58 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 padding: 3,
-                backgroundColor: '#F5F5F5' 
+                backgroundColor: 'white' 
                 }}
             >
               
               <Typography variant = "h4">
                 Mint your NFTicket
               </Typography>
-                
-            </Card>
-            <Grid container spacing={2} display = "flex" flexDirection = "column" alignItems="center">
-              <Grid item>
-                <Image         
-                  src={ticketPic}
-                  alt="NFTickets"
-                />
-              </Grid>
-              {response ? 
+              <CardMedia  title="NFTickets">
+              <Image
+                src={ticketPic}
+
+                objectFit="contain" // or objectFit="cover"
+              />
+            </CardMedia>
+            {response ? 
               <>
-                <Grid item>
+                <Grid item 
+                  sx = {{mt:1}}
+                >
                   <Typography variant = "h4">
                     {response[3].value}
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item 
+                  sx = {{m:1}}
+                >
+                  <Typography variant = "subtitle1">
+                    An NFTicket to your favorite event!
+                  </Typography>
+                </Grid>
+                <Grid item 
+                  sx = {{m:1}}
+                >
                   <Typography variant = "h5">
                     {response[0].value}
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item 
+                  sx = {{m:1}}
+                >
                   <Typography variant = "h5">
                     {response[1].value}
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item 
+                  sx = {{m:1}}
+                >
                   {returnButton()}
                 </Grid>
               </>
               : null }
-            </Grid>
+            </Card>
             <Copyright sx={{ mt: 5 }} />
         </Container>
     );

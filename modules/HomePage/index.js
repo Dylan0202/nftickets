@@ -204,80 +204,14 @@ export default function HomePage() {
       console.log(response.data.IpfsHash)
 
       //send eventID, maxCapacity and CID to the solidity contract
+      //OLD Contract Code: await contract.initEvent(eventObj.eventName, Number(eventObj.ticketNumber))
 
-      await contract.initEvent(eventObj.eventName, Number(eventObj.ticketNumber))
+      console.log(String(eventObj.eventName) + " " + String(eventObj.vendorName) + " " + String(eventDate)+ " " + String(eventTime)+ " " + Number(eventObj.ticketNumber)+ " " + 0+ " " + "https://gateway.pinata.cloud/ipfs/QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M")
+
+      await contract.initEvent(String(eventObj.eventName), String(eventObj.vendorName), String(eventDate), String(eventTime), Number(eventObj.ticketNumber), 0, "https://gateway.pinata.cloud/ipfs/QmbdZM2XWpSzS6LY6TjwGzSSnzgZWYioGq5JxPaoFzkJ6M")
       //move this to a button press after the contract loads
-      /*
-      router.push({
-        pathname: '/buyaticket',
-        query: {cid},
-      }) */
-      
-      //wait for data from the emitter
 
-      /*
-      router.push({
-        pathname: `/cryptoDFS/enter-contest`,
-        query: {
-          date: dfsTeam[9].date,
-          pg_one:  dfsTeam[1].name,
-          pg_two:  dfsTeam[2].name,
-          sg_one:  dfsTeam[3].name,
-          sg_two:  dfsTeam[4].name,
-          sf_one:  dfsTeam[5].name,
-          sf_two:  dfsTeam[6].name,
-          pf_one:  dfsTeam[7].name,
-          pf_two:  dfsTeam[8].name,
-          c:  dfsTeam[9].name,
-        },
-      })
-      */
-      
-      /*
-      try {
-        if (gameContract) {
-          console.log('Minting character in progress...');
-            await gameContract.mintDFSTeamNFT(
-            dfsTeam[9].date,
-            Number(dfsTeam[0].id),
-            Number(dfsTeam[1].id),
-            Number(dfsTeam[2].id),
-            Number(dfsTeam[3].id),
-            Number(dfsTeam[4].id),
-            Number(dfsTeam[5].id),
-            Number(dfsTeam[6].id),
-            Number(dfsTeam[7].id),
-            Number(dfsTeam[8].id),
-            {value: ethers.utils.parseEther("1")}
-          );
-
-          //router.push(`/cryptoDFS/enter-contest`) //could also transfer NFT Data
-
-          router.push({
-            pathname: `/cryptoDFS/enter-contest`,
-            query: {
-              date: dfsTeam[9].date,
-              pg_one:  dfsTeam[1].name,
-              pg_two:  dfsTeam[2].name,
-              sg_one:  dfsTeam[3].name,
-              sg_two:  dfsTeam[4].name,
-              sf_one:  dfsTeam[5].name,
-              sf_two:  dfsTeam[6].name,
-              pf_one:  dfsTeam[7].name,
-              pf_two:  dfsTeam[8].name,
-              c:  dfsTeam[9].name,
-            },
-          })
-
-
-          //await mintTxn.wait();
-          //console.log('mintTxn:', mintTxn);
-        }
-      } catch (error) {
-        console.warn('MintCharacterAction Error:', error);
-      }
-      */
-
+   
     } else {
       alert("confirm Metamask is connected")
     }
