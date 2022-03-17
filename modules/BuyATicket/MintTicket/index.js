@@ -13,6 +13,7 @@ import Image from 'next/image'
 import {useEffect} from 'react'
 import ticketPic from '../../../public/ticket.jpg'
 import CardMedia from '@mui/material/CardMedia';
+import NextLink from 'next/link'
 
 //import { styled } from '@mui/system';
 
@@ -45,7 +46,10 @@ const readJsonFromPinata = async (cid) => {
 
     let response = await axios.get(getUrl)
 
+    console.log(response)
+
       return response.data.attributes
+
 
     } catch (error) {
       console.log(error)
@@ -69,9 +73,16 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
     const returnButton = () =>{
       if(minted){
         return(
-        <Button variant = "contained" color = "primary" >
-          Ticket Minted!
-        </Button>
+          <Grid container display = "flex" flexDirection = "column" >
+            <Button variant = "contained" color = "primary" sx = {{m:1}}>
+              Ticket Minted!
+            </Button>
+            <Link href="/userTickets" >
+              <Button variant = "contained" color = "secondary" sx = {{m:1}}>
+                See Your Tickets
+              </Button>
+            </Link>
+           </Grid>
         )
 
       } else if(loading){
@@ -88,10 +99,14 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
       )
     }
 
-    useEffect(async () => {
+    useEffect( () => {
 
-      //console.log(details)
-      setResponse(await readJsonFromPinata(details.cid))
+      async function settingResponse() {
+        //console.log(details)
+        setResponse(await readJsonFromPinata(details.cid))
+      }
+
+      settingResponse()
 
       //console.log(response)
     }, [details]);
@@ -117,8 +132,8 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
               <CardMedia  title="NFTickets">
               <Image
                 src={ticketPic}
-
                 objectFit="contain" // or objectFit="cover"
+                alt = "nftticket"
               />
             </CardMedia>
             {response ? 
