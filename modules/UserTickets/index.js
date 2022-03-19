@@ -33,6 +33,8 @@ export default function UserTickets() {
   const [userNFTs, setUserNFTs] = useState(null);
 
 
+  let userNFTkey = 0
+
   /**Use Later
       const onMintEvent = async (sender, tokenId) => {
     setMinted(true)
@@ -221,7 +223,7 @@ export default function UserTickets() {
 
         {userNFTs.map((data)=> {
             return (
-                <TicketDisplay data = {data}/>
+                <TicketDisplay data = {data} key = {userNFTkey++}/>
             )
         })}
         </>
