@@ -214,7 +214,7 @@ export default function UserTickets() {
             alignItems: 'center',
             backgroundColor: 'primary.main'
             }}>
-            <Typography variant="h3" sx={{color: '#C9A35A', fontWeight: "bold"}}>
+            <Typography variant="h4" sx={{color: '#C9A35A', fontWeight: "bold"}}>
                 Your Tickets
             </Typography>
             </Card>

@@ -37,7 +37,7 @@ export default function TicketDisplay({data}) {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                <Typography variant="h6" sx={{color: '#C9A35A'}}>
+                <Typography variant="h6" sx={{color: 'secondary.main'}}>
                     {data.eventVendor}
                 </Typography>
                 <Typography variant="h5" sx={{color: 'primary.main', fontWeight: "bold"}}>
@@ -46,7 +46,7 @@ export default function TicketDisplay({data}) {
                 <Typography variant="body1" >
                     {data.eventDate} - {data.eventTime}
                 </Typography>
-                <Button sx={{color: 'secondary.main'}} onClick= {()=>{goToTicket()}}>
+                <Button onClick= {()=>{goToTicket()}}>
                    See Ticket
                 </Button>
 
