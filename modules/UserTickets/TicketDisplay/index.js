@@ -37,16 +37,16 @@ export default function TicketDisplay({data}) {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                <Typography component="h1" variant="h5">
+                <Typography variant="h6" sx={{color: '#C9A35A'}}>
+                    {data.eventVendor}
+                </Typography>
+                <Typography variant="h5" sx={{color: 'primary.main', fontWeight: "bold"}}>
                     {data.eventName}
                 </Typography>
-                <Typography component="h4" variant="h5">
-                    {data.eventTime}
+                <Typography variant="body1" >
+                    {data.eventDate} - {data.eventTime}
                 </Typography>
-                <Typography component="h5" variant="h5">
-                    {data.eventDate}
-                </Typography>
-                <Button onClick= {()=>{goToTicket()}}>
+                <Button sx={{color: 'secondary.main'}} onClick= {()=>{goToTicket()}}>
                    See Ticket
                 </Button>
 
