@@ -77,11 +77,11 @@ export default function MintTicket({mintDetails, ticketContract, minted}) {
             <Button variant = "contained" color = "primary" sx = {{m:1}}>
               Ticket Minted!
             </Button>
-            <Link href="/userTickets" >
+            <NextLink href="/userTickets" >
               <Button variant = "contained" color = "secondary" sx = {{m:1}}>
                 See Your Tickets
               </Button>
-            </Link>
+            </NextLink>
            </Grid>
         )
 
