@@ -73,8 +73,6 @@ export default function UserTickets() {
 
         if(nft.metadata.attributes.length > 0){
 
-          console.log(nft)
-
           userNftArray.push({
             eventName: nft.metadata.name,
             eventVendor: nft.metadata.attributes[0].value,
@@ -216,7 +214,7 @@ export default function UserTickets() {
             alignItems: 'center',
             backgroundColor: 'primary.main'
             }}>
-            <Typography component="h1" variant="h5" sx={{color: '#C9A35A', fontWeight: "bold"}}>
+            <Typography variant="h3" sx={{color: '#C9A35A', fontWeight: "bold"}}>
                 Your Tickets
             </Typography>
             </Card>
