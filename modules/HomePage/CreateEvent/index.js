@@ -17,7 +17,7 @@ import {useRouter} from 'next/router'
 import CardMedia from '@mui/material/CardMedia';
 import ticketPic from '../../../public/nftickets.png'
 import Image from 'next/image'
-
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 //import { styled } from '@mui/system';
 
@@ -41,6 +41,11 @@ function Copyright(props) {
   );
 }
 
+const copy = async (text) => {
+  await navigator.clipboard.writeText(text);
+  alert('Link copied, share it with your fans!');
+}
+
 
 export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirmedEvent}) {
 
@@ -49,6 +54,7 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
 
   const [dateValue, setDateValue] = React.useState(new Date());
   const [timeValue, setTimeValue] = React.useState(new Date());
+  
 
 
   function goToLink(){
@@ -171,7 +177,10 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
                           label="Event Date"
                           inputFormat="MM/dd/yyyy"
                           value={dateValue}
-                          onChange={handleDateChange}
+                          onChange={ (newValue) => {
+                            setDateValue(newValue);
+                            console.log(newValue)
+                          }}
                           sx ={{backgroundColor: "white"}} 
                           renderInput={(params) => <TextField {...params} />}
                         />
@@ -227,12 +236,23 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
                     }
 
                   { ticketUrl ? 
-                      <Alert 
-                      severity = "warning"
-                      sx={{
-                        maxWidth: "600px"
-                      }}>
-                        Mint your tickets here: {ticketUrl} </Alert> : null 
+                    <>
+                      <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          endIcon={<ContentCopyIcon />}
+                          onClick = {()=> copy(ticketUrl)}
+                          color="secondary"
+                          sx={{ 
+                            maxWidth: "250px",
+                            mt: 2, 
+                            mb: 2,
+                             }}
+                      >
+                        Copy Ticket URL
+                      </Button>
+                    </> : null 
                     }
                 
             </Card>

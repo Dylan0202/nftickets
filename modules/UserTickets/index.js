@@ -33,6 +33,8 @@ export default function UserTickets() {
   const [userNFTs, setUserNFTs] = useState(null);
 
 
+  let userNFTkey = 0
+
   /**Use Later
       const onMintEvent = async (sender, tokenId) => {
     setMinted(true)
@@ -66,17 +68,16 @@ export default function UserTickets() {
 
       for(let nft of data.data.ownedNfts){
 
-        //console.log(nft.metadata)
+        console.log(nft.metadata)
         //console.log(nft.id.tokenId)
 
         if(nft.metadata.attributes.length > 0){
 
-          console.log(nft)
-
           userNftArray.push({
-            eventName: nft.metadata.attributes[2].value,
-            eventTime: nft.metadata.attributes[1].value,
-            eventDate: nft.metadata.attributes[0].value,
+            eventName: nft.metadata.name,
+            eventVendor: nft.metadata.attributes[0].value,
+            eventTime: nft.metadata.attributes[2].value,
+            eventDate: nft.metadata.attributes[1].value,
             ticketID: parseInt(nft.id.tokenId, 16)
           })
 
@@ -211,8 +212,9 @@ export default function UserTickets() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            backgroundColor: 'primary.main'
             }}>
-            <Typography component="h1" variant="h5">
+            <Typography variant="h4" sx={{color: '#C9A35A', fontWeight: "bold"}}>
                 Your Tickets
             </Typography>
             </Card>
@@ -221,7 +223,7 @@ export default function UserTickets() {
 
         {userNFTs.map((data)=> {
             return (
-                <TicketDisplay data = {data}/>
+                <TicketDisplay data = {data} key = {userNFTkey++}/>
             )
         })}
         </>
