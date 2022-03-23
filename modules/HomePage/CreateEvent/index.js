@@ -177,9 +177,9 @@ export default function CreateEvent({makeEvent, loadingEvent, ticketUrl, confirm
                           label="Event Date"
                           inputFormat="MM/dd/yyyy"
                           value={dateValue}
-                          onChange={ (newValue) => {
-                            setDateValue(newValue);
-                            console.log(newValue)
+                          onChange={ (dateVal) => {
+                            setDateValue(dateVal);
+                            console.log(dateVal)
                           }}
                           sx ={{backgroundColor: "white"}} 
                           renderInput={(params) => <TextField {...params} />}

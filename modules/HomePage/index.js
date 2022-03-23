@@ -164,7 +164,8 @@ export default function HomePage() {
 
       setLoadingEvent(true)
 
-      let {eventDate, eventTime} = formatTime(eventObj.timeValue)
+      let {eventTime} = formatTime(eventObj.timeValue)
+      let {eventDate} = formatTime(eventObj.dateValue)
 
 
       let pinataObj = {
